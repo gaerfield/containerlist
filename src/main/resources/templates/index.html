@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/layout}">
+<head>
+    <title>Wave Instanzen</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>App-Port</th>
+            <th>DB-Port</th>
+            <th>Version</th>
+        </tr>
+
+        <tr th:each="wi : ${waveInstances}">
+            <td><span th:text="${wi.name}"> Name </span></td>
+            <td><a href="" th:href="${wi.appUrl()}" th:text="${wi.appPort()}"> App-Port </a></td>
+            <td><span th:text="${wi.dbPort()}"> DB-Port </span></td>
+            <td><span th:text="${wi.version()}"> Version </span></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  wave-instances:
+    build:
+      context: .
+      args:
+        JAR_FILE: build/libs/containerlist-1.0-SNAPSHOT.jar
+    image: wave-instances:latest
+    ports:
+      - 8080
+    environment:
+      - JAVA_OPTS=-Dwave.domain=localhost -Dwave.contextpath=wave
+    volumes:
+      - /tmp:/tmp
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./app.jar:/app.jar
+
