@@ -1,9 +1,8 @@
 package de.kramhal.containerlist
 
-import com.spotify.docker.client.DefaultDockerClient
-import com.spotify.docker.client.DockerClient
 import mu.KLogging
 import org.springframework.boot.web.servlet.error.ErrorController
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServletRequest
 
 
 @RestController
-class RestApi : ErrorController {
+class RestApi(private val findRunningWaveInstances: FindRunningWaveInstances) : ErrorController {
 
     companion object : KLogging()
 
@@ -23,14 +22,11 @@ class RestApi : ErrorController {
         val attribute = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
         if (attribute != null)
             return attribute.toString()
-        return "unknwon error"
+        return "unknown error"
     }
 
-    @GetMapping("/call", produces = arrayOf("text/plain"))
-    fun call(): String {
-        val docker = DefaultDockerClient.fromEnv().build()
-
-        val images = docker.listImages(DockerClient.ListImagesParam.allImages())
-        return "blubb\n" + images.map { image -> image.toString() }.joinToString("\n")
+    @GetMapping("/", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun call(): List<FindRunningWaveInstances.WaveInstance> {
+        return findRunningWaveInstances.findRunningWaveInstances()
     }
 }
